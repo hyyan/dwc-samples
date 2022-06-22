@@ -1,0 +1,27 @@
+use com.google.gson.JsonObject
+
+style! = new JsonObject()
+style!.addProperty("display", "flex")
+style!.addProperty("align-items", "center")
+style!.addProperty("justify-content", "center")
+style!.addProperty("width", "100vw")
+style!.addProperty("height", "100vh")
+
+sysgui! = BBjAPI().openSysGui("X0")
+window! = BBjAPI().openSysGui("X0").addWindow("ButtonWithSpinner", $01101000$)
+window!.setPanelStyle("@element", str(style!))
+window!.setAttribute("@app-theme", "dark")
+window!.setCallback(window!.ON_CLOSE, "eoj")
+
+label! = "" +
+: "<html>" +
+: " <bbj-spinner style='margin-right: var(--bbj-space-s)'></bbj-spinner>" +
+: " A Button with bbj-spinner" +
+: "</html>" 
+button! = window!.addButton(label!)
+button!.setAttribute("expanse","xl")
+
+process_events
+
+eoj:
+release
