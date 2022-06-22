@@ -1,0 +1,48 @@
+use com.google.gson.JsonObject
+
+style! = new JsonObject()
+style!.addProperty("display", "flex")
+style!.addProperty(" align-items", "center")
+style!.addProperty("justify-content", "center")
+style!.addProperty("width", "100vw")
+style!.addProperty("height", "100vh")
+
+sysgui! = BBjAPI().openSysGui("X0")
+window! = BBjAPI().openSysGui("X0").addWindow("BBjBusyIndicator", $01101000$)
+window!.setPanelStyle("@element", str(style!))
+window!.setAttribute("@app-theme", "dark")
+window!.setCallback(window!.ON_CLOSE, "eoj")
+
+button! = window!.addButton("Show Busy Indicator")
+button!.setAttribute("expanse","xl")
+button!.setCallback(button!.ON_BUTTON_PUSH,"handleClick")
+
+process_events
+
+handleClick:
+  busy! = BBjAPI().getBuiManager().getBusyIndicator(err=*return)
+  busy!.setText("The busy indicator is running ...")
+
+  rem BBjBusyIndicator::setAttribute BBj 22.02+ DWC
+  rem @see https://basishub.github.io/basis-next/#/dwc/bbj-busy
+
+  busy!.setAttribute("spinner-clockwise", "false")
+  busy!.setAttribute("spinner-speed", "2000")
+  busy!.setAttribute("spinner-theme", "danger")
+
+  busy!.setVisible(1)
+  wait 3
+
+  busy!.setText("The busy indicator is running with the 'warning' theme ...")
+  busy!.setAttribute("spinner-theme","warning")
+  wait 3
+
+  busy!.setText("All done and the 'success' theme is activated ...")
+  busy!.setAttribute("spinner-theme","success")
+  wait 2
+
+  busy!.setVisible(0)
+return
+
+eoj:
+release
